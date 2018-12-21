@@ -1,12 +1,12 @@
 import pymysql
 import hashlib
 
-def sql(dbname,url):
+def sql(db_name,biao_name,url):
     db = pymysql.connect(
         host='localhost',
         user='root',
         password='',
-        db='xiaodown',
+        db=db_name,
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -19,7 +19,7 @@ def sql(dbname,url):
     url_hash = md5.hexdigest()
 
     # 查询
-    sql = "SELECT * FROM "+dbname+" WHERE url_hash='"+str(url_hash)+"'"
+    sql = "SELECT * FROM "+biao_name+" WHERE url_hash='"+str(url_hash)+"'"
     cursor.execute(sql)
     res = cursor.fetchall()
     db.commit()
@@ -31,11 +31,9 @@ def sql(dbname,url):
         cx_res = 'bucunzai'
 
         # 插入到mysql
-        sql = "INSERT INTO "+dbname+" (`ID`, `url`, `url_hash`) VALUES (NULL, '"+str(url)+"', '"+str(url_hash)+"');"
+        sql = "INSERT INTO "+biao_name+" (`ID`, `url`, `url_hash`) VALUES (NULL, '"+str(url)+"', '"+str(url_hash)+"');"
         cursor.execute(sql)
         db.commit()
 
     db.close()
     return cx_res
-
-sql('dribbble','https://www.cnblogs11.com/pycode/p/hashlib0001.12212html')

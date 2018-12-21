@@ -1,10 +1,10 @@
 from script import google_translate
+from script import sql
+from script import time
 from requests_html import HTMLSession
 import ssl
-import time
 
 ssl._create_default_https_context=ssl._create_unverified_context
-time = str(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
 
 def htmldown(url):
     html = HTMLSession().get(url).html
@@ -29,3 +29,12 @@ def single_list():
     single_list = list(set(single_list))
     return single_list
 
+def fabu(url):
+    if str(sql.sql('xiaodown','dribbble',str(url))) == 'bucunzai':
+        print(time.thetime()+'新文章，开始采集 '+url)
+    else:
+        print(time.thetime()+'已存在跳过 '+url)
+
+def run():
+    for i in single_list():
+        fabu(i)
