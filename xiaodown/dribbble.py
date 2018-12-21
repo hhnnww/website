@@ -29,5 +29,3 @@ def single_list():
     single_list = list(set(single_list))
     print(time+'发现页面：'+str(len(single_list)))
     return single_list
-
-single_list()
