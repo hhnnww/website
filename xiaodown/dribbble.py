@@ -13,7 +13,7 @@ def htmldown(url):
 def page_list():
     x = 1
     page_list = []
-    while(x<=20):
+    while(x<=1):
         page_list.append('https://dribbble.com/?per_page=24&page='+str(x))
         x = x +1
     return page_list
@@ -25,7 +25,9 @@ def single_list():
         url = html.find('.dribbble-over')
         for i in url:
             url = i.attrs['href']
-            single_list.append('https://dribbble.com'+str(url))
+            single_list.append('https://dribbble.com'+str(url)+'/attachments')
     single_list = list(set(single_list))
-    print(time+'发现页面：'+str(len(single_list)))
     return single_list
+
+for i in single_list():
+    print(i)
