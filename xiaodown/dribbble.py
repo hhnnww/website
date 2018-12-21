@@ -29,5 +29,3 @@ def single_list():
     single_list = list(set(single_list))
     return single_list
 
-for i in single_list():
-    print(i)
