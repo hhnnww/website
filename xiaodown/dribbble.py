@@ -13,7 +13,7 @@ def htmldown(url):
 def page_list():
     x = 1
     page_list = []
-    while(x<=1):
+    while(x<=2):
         page_list.append('https://dribbble.com/?per_page=24&page='+str(x))
         x = x +1
     return page_list

@@ -3,8 +3,10 @@ import time
 import gc
 
 x = 1
-while(x<2):
-
+while True:
+    # 采集dribbble
     dribbble.run()
     gc.collect()
     time.sleep(10)
+
+    #
