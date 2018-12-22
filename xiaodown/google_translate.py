@@ -4,7 +4,7 @@ import json
 import re
 import os
 
-# default=execjs.get(execjs.runtime_names.Node)
+os.environ["EXECJS_RUNTIME"] = "Node"
 
 class Py4Js():
     def __init__(self):
@@ -86,7 +86,7 @@ def translate_en_to_cn(content,tk):
 def cn_to_en(con):
     js = Py4Js()
     tk = js.getTk(con)
-    res = str(translate_en_to_cn(con, tk))
+    res = str(translate_cn_to_en(con, tk))
     res = json.loads(str(res), encoding='utf-8')
     all_res = ''
     for i in res[0]:

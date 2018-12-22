@@ -4,7 +4,7 @@ import time
 
 def sql_chaxun(db_name,biao_name,url):
     db = pymysql.connect(
-        host='120.78.168.145',
+        host='127.0.0.1',
         user='xiaodown',
         password='199011',
         db=db_name,
@@ -36,7 +36,7 @@ def sql_chaxun(db_name,biao_name,url):
 
 def sql_charu(db_name,biao_name,url):
     db = pymysql.connect(
-        host='120.78.168.145',
+        host='127.0.0.1',
         user='xiaodown',
         password='199011',
         db=db_name,

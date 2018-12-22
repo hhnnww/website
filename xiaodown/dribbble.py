@@ -44,6 +44,7 @@ def fabu(url):
     wp = Client('https://www.xiaodown.com/xmlrpc.php', 'admin', '12qwaszx')
     post = WordPressPost()
     post.post_status = 'publish'
+    
     print('\n')
     print(xd_time.thetime()+'发现文章：'+url)
 
@@ -134,7 +135,5 @@ def run():
             fabu(url)
             sql.sql_charu('xiaodown','dribbble',str(url))
             print(xd_time.thetime() + '插入数据库：'+url)
-            print('\n')
         else:
             print(xd_time.thetime() + '已存在跳过：' + url)
-            print('\n')
