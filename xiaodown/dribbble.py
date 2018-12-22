@@ -1,5 +1,4 @@
 import sys
-sys.path.append('../script/')
 import os
 import re
 import google_translate
