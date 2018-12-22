@@ -1,6 +1,6 @@
 import pymysql
 import hashlib
-import time
+import xd_time
 
 def sql_chaxun(db_name,biao_name,url):
     db = pymysql.connect(
@@ -55,5 +55,6 @@ def sql_charu(db_name,biao_name,url):
     sql = "INSERT INTO " + biao_name + " (`ID`, `url`, `url_hash`) VALUES (NULL, '" + str(url) + "', '" + str(
         url_hash) + "');"
     cursor.execute(sql)
+    print(xd_time.thetime()+'自增id为：'+ str(db.insert_id()))
     db.commit()
     db.close()

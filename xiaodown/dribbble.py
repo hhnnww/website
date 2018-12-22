@@ -41,11 +41,10 @@ def single_list():
     return single_list
 
 def fabu(url):
-    wp = Client('https://www.xiaodown.com/xmlrpc.php', 'admin', '12qwaszx')
+    wp = Client('https://127.0.0.1/xmlrpc.php', 'admin', '12qwaszx')
     post = WordPressPost()
     post.post_status = 'publish'
-    
-    print('\n')
+
     print(xd_time.thetime()+'发现文章：'+url)
 
     html = htmldown(url)
@@ -134,6 +133,7 @@ def run():
         if str(sql.sql_chaxun('xiaodown', 'dribbble', str(url))) == 'bucunzai':
             fabu(url)
             sql.sql_charu('xiaodown','dribbble',str(url))
-            print(xd_time.thetime() + '插入数据库：'+url)
+            print('\n\n')
         else:
             print(xd_time.thetime() + '已存在跳过：' + url)
+            print('\n\n')
