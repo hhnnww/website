@@ -2,7 +2,7 @@ import sys
 import os
 import re
 import google_translate
-import sql
+import xd_sql
 import xd_time
 from requests_html import HTMLSession
 import ssl
@@ -130,9 +130,9 @@ def fabu(url):
 
 def run():
     for url in single_list():
-        if str(sql.sql_chaxun('xiaodown', 'dribbble', str(url))) == 'bucunzai':
+        if str(xd_sql.sql_chaxun('xiaodown', 'dribbble', str(url))) == 'bucunzai':
             fabu(url)
-            sql.sql_charu('xiaodown','dribbble',str(url))
+            xd_sql.sql_charu('xiaodown','dribbble',str(url))
             print('\n\n')
         else:
             print(xd_time.thetime() + '已存在跳过：' + url)
