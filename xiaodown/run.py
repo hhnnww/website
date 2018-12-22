@@ -1,4 +1,6 @@
-from xiaodown import dribbble
+import sys
+sys.path.append('../xiaodown/')
+import dribbble
 import time
 import gc
 

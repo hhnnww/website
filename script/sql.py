@@ -1,11 +1,12 @@
 import pymysql
 import hashlib
+import time
 
-def sql(db_name,biao_name,url):
+def sql_chaxun(db_name,biao_name,url):
     db = pymysql.connect(
-        host='localhost',
-        user='root',
-        password='',
+        host='120.78.168.145',
+        user='xiaodown',
+        password='199011',
         db=db_name,
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor
@@ -30,10 +31,29 @@ def sql(db_name,biao_name,url):
     else:
         cx_res = 'bucunzai'
 
-        # 插入到mysql
-        sql = "INSERT INTO "+biao_name+" (`ID`, `url`, `url_hash`) VALUES (NULL, '"+str(url)+"', '"+str(url_hash)+"');"
-        cursor.execute(sql)
-        db.commit()
-
     db.close()
     return cx_res
+
+def sql_charu(db_name,biao_name,url):
+    db = pymysql.connect(
+        host='120.78.168.145',
+        user='xiaodown',
+        password='199011',
+        db=db_name,
+        charset='utf8mb4',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+
+    cursor = db.cursor()
+
+    # 生成hash值
+    md5 = hashlib.md5()
+    md5.update(str(url).encode('utf-8'))
+    url_hash = md5.hexdigest()
+
+    # 插入到mysql
+    sql = "INSERT INTO " + biao_name + " (`ID`, `url`, `url_hash`) VALUES (NULL, '" + str(url) + "', '" + str(
+        url_hash) + "');"
+    cursor.execute(sql)
+    db.commit()
+    db.close()

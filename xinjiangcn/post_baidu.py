@@ -67,17 +67,17 @@ def fabu(single_link):
     post.content = all_content.replace("展开全部","")
 
     # 添加特色图
-    # try:
-    #     html.find('.wgt-ask .q-img-wp img.q-img-item', first=True).attrs['src']
-    # except AttributeError:
-    #     post.thumbnail = None
-    # else:
-    #     img = html.find('img.q-img-item', first=True).attrs['src']
-    #     img = HTMLSession().get(img).content
-    #     data = {'name': 'picture.jpg','type': 'image/jpeg'}
-    #     data['bits'] = xmlrpc_client.Binary(img)
-    #     response = wp.call(media.UploadFile(data))
-    #     post.thumbnail = response['id']
+    try:
+        html.find('.wgt-ask .q-img-wp img.q-img-item', first=True).attrs['src']
+    except AttributeError:
+        post.thumbnail = None
+    else:
+        img = html.find('img.q-img-item', first=True).attrs['src']
+        img = HTMLSession().get(img).content
+        data = {'name': 'picture.jpg','type': 'image/jpeg'}
+        data['bits'] = xmlrpc_client.Binary(img)
+        response = wp.call(media.UploadFile(data))
+        post.thumbnail = response['id']
 
     post.id = wp.call(posts.NewPost(post))  # 返回文章ID
     print(str(base_url)+'?p='+str(post.id))

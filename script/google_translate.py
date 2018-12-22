@@ -1,6 +1,10 @@
 import execjs
 import urllib.request
+import json
 import re
+import os
+
+# default=execjs.get(execjs.runtime_names.Node)
 
 class Py4Js():
     def __init__(self):
@@ -65,8 +69,7 @@ def translate_cn_to_en(content, tk):
           "&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&clearbtn=1&otf=1&pc=1" \
           "&srcrom=0&ssel=0&tsel=0&kc=2&tk=%s&q=%s" % (tk, content)
     result = open_url(url)
-    end = result.find("\",")
-    return result[4:end]
+    return result
 
 def translate_en_to_cn(content,tk):
     if len(content) > 4891:
@@ -78,20 +81,26 @@ def translate_en_to_cn(content,tk):
           "&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&clearbtn=1&otf=1&pc=1" \
           "&srcrom=0&ssel=0&tsel=0&kc=2&tk=%s&q=%s" % (tk, content)
     result = open_url(url)
-    end = result.find("\",")
-    return result[4:end]
+    return result
 
 def cn_to_en(con):
     js = Py4Js()
     tk = js.getTk(con)
-    return translate_cn_to_en(con, tk)
+    res = str(translate_en_to_cn(con, tk))
+    res = json.loads(str(res), encoding='utf-8')
+    all_res = ''
+    for i in res[0]:
+        all_res = str(all_res) + str(i[0])
+    all_res = re.sub('None', '', all_res)
+    return all_res
 
 def en_to_cn(con):
     js = Py4Js()
     tk = js.getTk(con)
-    return translate_en_to_cn(con,tk)
-
-def weiyanchuang(con):
-    con = re.sub('\s','，',con)
-    res = cn_to_en(con)
-    return en_to_cn(res)
+    res = str(translate_en_to_cn(con,tk))
+    res = json.loads(str(res),encoding='utf-8')
+    all_res = ''
+    for i in res[0]:
+        all_res = str(all_res) + str(i[0])
+    all_res = re.sub('None','',all_res)
+    return all_res
