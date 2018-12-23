@@ -52,10 +52,8 @@ def sql_charu(url):
     url_hash = md5.hexdigest()
 
     # 插入到mysql
-    sql = "INSERT INTO sexinsex (`ID`, `url`, `url_hash`) VALUES (NULL, '" + str(url) + "', '" + str(
-        url_hash) + "');"
+    sql = "INSERT INTO sexinsex (`ID`, `url`, `url_hash`) VALUES (NULL, '" + str(url) + "', '" + str(url_hash) + "');"
     cursor.execute(sql)
     print(cn_time.thetime()+'自增id为：'+ str(db.insert_id()))
-    print('\n')
     db.commit()
     db.close()

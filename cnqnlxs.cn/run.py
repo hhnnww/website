@@ -50,38 +50,41 @@ def fabu(url):
 	post.post_status = 'publish'
 
 	print(cn_time.thetime()+str(url))
-	html = htmldown(url)
-
 	try:
-		title = html.find('.mainbox h1')[0].text
-		title = re.sub(r'\[.*?\]','',title)
-		title = re.sub(r'(作者.*)','',title)
-		title = re.sub(r'(\d)','',title)
-		title = re.sub(r'(-|－)','',title)
-		title = re.sub(r'(\s)','',title)
-		title = re.sub(r"\\【.*?】+|\\《.*?》+|\\#.*?#+|[.!/_,$&%^*()<>+'?@|:~{}#]+|[—！\\\，。=？、：“”‘’￥……（）《》【】]","",title)
-		print(cn_time.thetime()+str(title))
-
-		post.title = title
+		html = htmldown(url)
 	except:
-		print('标题错误，返回')
-		return
+		pass
+	else:
+		try:
+			title = html.find('.mainbox h1')[0].text
+			title = re.sub(r'\[.*?\]','',title)
+			title = re.sub(r'(作者.*)','',title)
+			title = re.sub(r'(\d)','',title)
+			title = re.sub(r'(-|－)','',title)
+			title = re.sub(r'(\s)','',title)
+			title = re.sub(r"\\【.*?】+|\\《.*?》+|\\#.*?#+|[.!/_,$&%^*()<>+'?@|:~{}#]+|[—！\\\，。=？、：“”‘’￥……（）《》【】]","",title)
+			print(cn_time.thetime()+str(title))
 
-	try:
-		content = html.find('div.t_msgfont .t_msgfont')[0].text
-		content = re.sub(r'(\n\n)','++',content)
-		content = re.sub(r'\n','',content)
-		content = re.sub(r'\+\+','\n\n',content)
-		# print(content)
+			post.title = title
+		except:
+			print('标题错误，返回')
+			return
 
-		post.content = content
-	except:
-		print('内容错误，返回')
-		return
+		try:
+			content = html.find('div.t_msgfont .t_msgfont')[0].text
+			content = re.sub(r'(\n\n)','++',content)
+			content = re.sub(r'\n','',content)
+			content = re.sub(r'\+\+','\n\n',content)
+			# print(content)
 
-	post.id = wp.call(NewPost(post))
-	print(cn_time.thetime()+'http://cnqnlxs.cn/?p='+str(post.id))
-	print(cn_time.thetime()+'发布成功')
+			post.content = content
+		except:
+			print('内容错误，返回')
+			return
+
+		post.id = wp.call(NewPost(post))
+		print(cn_time.thetime()+'http://cnqnlxs.cn/?p='+str(post.id))
+		print(cn_time.thetime()+'发布成功')
 
 def run():
 	for url in single_list():
@@ -90,11 +93,11 @@ def run():
 			fabu(url)
 			cn_sql.sql_charu(url)
 			print(cn_time.thetime()+'url插入到数据库去重')
+			print('\n')
 		else:
 			print(cn_time.thetime()+'文章存在，跳过~~~')
 			print('\n')
 
-x = 1
-while (x < 2):
+while True:
 	run()
 	time.sleep(3600)
