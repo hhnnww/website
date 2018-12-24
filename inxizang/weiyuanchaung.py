@@ -114,5 +114,4 @@ def weiyuanchaung(con):
     print('\n')
     print('伪原创：')
     print(text)
-
-weiyuanchaung('进藏航班经济舱在市场价格的基础上，再给予旅游者不同比例的包价票价优惠。目前，西藏航空2月1日起执行票价优惠，其他入藏航空公司航班票价优惠办法正在协调推进中，届时将通过旅游官网公布。')
+    return text
