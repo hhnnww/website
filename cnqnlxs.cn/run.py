@@ -100,4 +100,4 @@ def run():
 
 while True:
 	run()
-	time.sleep(3600)
+	time.sleep(60*60*4)
