@@ -44,6 +44,7 @@ def single_list():
 
 def imgup(url):
     hashr = hash(url)
+    hashr = re.sub(r'-','',hashr)
 
     img = HTMLSession().get(url).content
     name = os.path.basename(url)
@@ -100,7 +101,7 @@ def fabu(url):
     try:
         content = html.find('.shot-desc')[0].text
     except:
-        pass
+        post.content = ''
     else:
         content = google_translate.en_to_cn(content)
         content = re.sub('\n','\n\n',content)
