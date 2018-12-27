@@ -5,8 +5,8 @@ import xd_time
 def sql_chaxun(db_name,biao_name,url):
     db = pymysql.connect(
         host='127.0.0.1',
-        user='xiaodown',
-        password='199011',
+        user='root',
+        password='',
         db=db_name,
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor
