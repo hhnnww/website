@@ -8,3 +8,5 @@ while True:
     dribbble.run()
     gc.collect()
     time.sleep(10)
+
+    
