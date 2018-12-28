@@ -3,6 +3,11 @@ import time
 from requests_html import HTMLSession
 import re
 import hashlib
+import os
+import hashlib
+import datetime
+import re
+
 
 def htmldown(url):
 	html = HTMLSession().get(url).html
@@ -79,3 +84,11 @@ def fabu(url):
                 'key':'att',
                 'value':att
                 })
+
+
+url = 'http://baidu.com/word.png'
+on_time = str(datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
+
+name = os.path.basename(url)
+name = on_time+'_'+name
+print(name)
