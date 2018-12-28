@@ -27,7 +27,7 @@ def htmldown(url):
 def page_list():
     x = 1
     page_list = []
-    while(x<=5):
+    while(x<=2):
         page_list.append('https://dribbble.com/?per_page=24&page='+str(x))
         x = x +1
     return page_list
@@ -49,19 +49,28 @@ def imgup(url):
     on_time = str(datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
     
     name = os.path.basename(url)
-    name = on_time+'_'+name
+    name = re.sub(r'.*?\.','.',name)
+    name = on_time+name
     
     year = str(time.strftime('%Y'))
     month = str(time.strftime('%m'))
+
+    if os.path.exists('C:\\xampp\\htdocs\\wp-content\\uploads\\'+year) == False:
+        os.mkdir('C:\\xampp\\htdocs\\wp-content\\uploads\\'+year)
+
+    if os.path.exists('C:\\xampp\\htdocs\\wp-content\\uploads\\'+year+'\\'+month) == False:
+        os.mkdir('C:\\xampp\\htdocs\\wp-content\\uploads\\'+year+'\\'+month)
     
     file_path = 'C:\\xampp\\htdocs\\wp-content\\uploads\\'+year+'\\'+month+'\\'+name
 
     with open('C:\\xampp\\htdocs\\wp-content\\uploads\\'+year+'\\'+month+'\\'+name,'wb') as f:
         f.write(img)
+
+    time.sleep(1)
     return 'http://127.0.0.1/wp-content/uploads/'+year+'/'+month+'/'+name
 
 def shuchu(text,link):
-    print(xd_time.thetime()+text+':'+link)
+    print(xd_time.thetime()+text+':'+str(link))
 
 def fabu(url):
     
@@ -90,7 +99,6 @@ def fabu(url):
     except:
         pass
     else:
-        title = google_translate.en_to_cn(title)
         post.title = str(title)
         shuchu('开始采集',title)
 
@@ -100,10 +108,7 @@ def fabu(url):
     except:
         post.content = ''
     else:
-        content = google_translate.en_to_cn(content)
-        content = re.sub('\n','\n\n',content)
         post.content = str(content)
-        # print(content)
 
     # 标签
     try:
@@ -114,11 +119,10 @@ def fabu(url):
         tag_list_text =''
         for i in tag:
             tag_list_text = tag_list_text + str(i.text) + ','
-        tag_list_text = google_translate.en_to_cn(tag_list_text)
-        tag_list = tag_list_text.split('，')
+        tag_list = tag_list_text.split(',')
         tag_list = list(filter(None,tag_list))
         post.terms_names['post_tag'] = tag_list
-        # print(tag_list)
+        shuchu('标签',tag_list)
 
     # 颜色
     try:
@@ -129,11 +133,12 @@ def fabu(url):
         color_list = ''
         for i in color:
             color_list = color_list + str(i.text) + ','
+        color_list = color_list[:-1]
         post.custom_fields.append({
             'key':'color',
             'value':color_list
         })
-        # print(color_list)
+        shuchu('颜色',color_list)
 
     # 特色图片
     try:
@@ -141,13 +146,12 @@ def fabu(url):
     except:
         pass
     else:
-        img = HTMLSession().get(thumb).content
-        name = os.path.basename(thumb)
-        data = {'name':name,'type':'image/jpeg'}
-        data['bits'] = xmlrpc_client.Binary(img)
-        response = wp.call(media.UploadFile(data))
-        post.thumbnail = response['id']
-        shuchu('上传特色图成功',response['url'])
+        ts_att = imgup(thumb)
+        post.custom_fields.append({
+            'key':'thumb',
+            'value':ts_att
+            })
+        shuchu('特色图片',ts_att)
 
     # 附件
     img_type = html.find('.main-shot')[0].attrs['class']
@@ -177,13 +181,11 @@ def fabu(url):
             att_url = html.find('.main-shot .detail-shot a')[0].attrs['href']
         except:
             # 如果不存在附件页面，直接抓取当页图片
-            att = html.find('.main-shot .detail-shot img')[0].attrs['src']
-            att = imgup(att)
             post.custom_fields.append({
                 'key':'att',
-                'value':att
+                'value':ts_att
                 })
-            shuchu('单张图片附件',att)
+            shuchu('没有附件，采用特色图',ts_att)
         else:
             # 开始载入附件页面进行分析
             att_url = 'https://dribbble.com'+str(att_url)
@@ -193,22 +195,22 @@ def fabu(url):
                 img_list = att_html.find('#attachments ul')[0].find('li')
             except:
                 # 如果附件页面只有一张图
-                att = att_html.find('#viewer #viewer-img img')[0].attrs['src']
-                att = imgup(att)
                 post.custom_fields.append({
                     'key':'att',
-                    'value':att
+                    'value':ts_att
                     })
-                shuchu('单张图片附件',att)
-
+                shuchu('附件页只有一张图，采用特色图',ts_att)
             else:
                 # 如果附件页面存在ul有多张图片
-                att = response['url']
-                for i in img_list[1:]:
-                    img = i.find('a img')[0].attrs['src']
-                    img = re.sub(r'\/thumbnail','',img)
-                    single_att = imgup(img)
-                    att = str(single_att)+','+att
+                att = str(ts_att)
+                for i in img_list:
+                    if str(i.find('a img')[0].attrs['src']) == str(thumb):
+                        shuchu('附件与特色图相同','跳过')
+                    else:
+                        img = i.find('a img')[0].attrs['src']
+                        img = re.sub(r'\/thumbnail','',img)
+                        single_att = imgup(img)
+                        att = att+','+str(single_att)
                 shuchu('多张图片附件',att)
                 post.custom_fields.append({
                     'key':'att',
@@ -216,15 +218,20 @@ def fabu(url):
                     })
 
     post.id = wp.call(posts.NewPost(post))
-    shuchu('发布成功',post.id)
+    shuchu('发布成功','http://127.0.0.1/?p='+str(post.id))
 
 def run():
     for url in single_list():
         if str(xd_sql.sql_chaxun('xiaodown', 'dribbble', str(url))) == 'bucunzai':
-            fabu(url)
-            # xd_sql.sql_charu('xiaodown','dribbble',str(url))
-            # shuchu('插入到mysql去重','')
-            print('\n\n')
+            try:
+                fabu(url)
+            except:
+                shuchu('发布错误','返回')
+                return
+            else:
+                # xd_sql.sql_charu('xiaodown','dribbble',str(url))
+                # shuchu('插入到mysql去重','')
+                print('\n\n')
         else:
             shuchu('已存在跳过',url)
             print('\n\n')
