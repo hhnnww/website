@@ -20,10 +20,12 @@ from wordpress_xmlrpc.methods import media, posts
 
 ssl._create_default_https_context=ssl._create_unverified_context
 
+# 下载模块
 def htmldown(url):
     html = HTMLSession().get(url).html
     return html
 
+# 生成列表页函数
 def page_list():
     x = 1
     page_list = []
@@ -32,6 +34,7 @@ def page_list():
         x = x +1
     return page_list
 
+# 从列表页中生成单页函数
 def single_list():
     single_list = []
     for i in page_list():
@@ -43,6 +46,8 @@ def single_list():
     single_list = list(set(single_list))
     return single_list
 
+
+# 图片直接上传函数
 def imgup(url):
     
     img = HTMLSession().get(url).content
@@ -69,9 +74,11 @@ def imgup(url):
     time.sleep(1)
     return 'http://127.0.0.1/wp-content/uploads/'+year+'/'+month+'/'+name
 
+# 格式化打印函数
 def shuchu(text,link):
     print(xd_time.thetime()+text+':'+str(link))
 
+# 文章解析发布函数
 def fabu(url):
     
     wp = Client('http://127.0.0.1/xmlrpc.php', 'admin', '111')
@@ -226,11 +233,11 @@ def run():
             try:
                 fabu(url)
             except:
-                shuchu('发布错误','返回')
+                shuchu('发布错误','跳过')
                 return
             else:
                 # xd_sql.sql_charu('xiaodown','dribbble',str(url))
-                # shuchu('插入到mysql去重','')
+                # shuchu('插入到mysql去重','成功')
                 print('\n\n')
         else:
             shuchu('已存在跳过',url)
