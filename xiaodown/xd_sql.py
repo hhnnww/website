@@ -1,6 +1,7 @@
 import pymysql
 import hashlib
 import xd_time
+import dribbble
 
 def sql_chaxun(db_name,biao_name,url):
     db = pymysql.connect(
@@ -37,8 +38,8 @@ def sql_chaxun(db_name,biao_name,url):
 def sql_charu(db_name,biao_name,url):
     db = pymysql.connect(
         host='127.0.0.1',
-        user='xiaodown',
-        password='199011',
+        user='root',
+        password='',
         db=db_name,
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor
@@ -55,6 +56,6 @@ def sql_charu(db_name,biao_name,url):
     sql = "INSERT INTO " + biao_name + " (`ID`, `url`, `url_hash`) VALUES (NULL, '" + str(url) + "', '" + str(
         url_hash) + "');"
     cursor.execute(sql)
-    print(xd_time.thetime()+'自增id为：'+ str(db.insert_id()))
+    dribbble.shuchu('自增id为',str(db.insert_id()))
     db.commit()
     db.close()

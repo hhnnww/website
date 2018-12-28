@@ -236,8 +236,8 @@ def run():
                 shuchu('发布错误','跳过')
                 return
             else:
-                # xd_sql.sql_charu('xiaodown','dribbble',str(url))
-                # shuchu('插入到mysql去重','成功')
+                xd_sql.sql_charu('xiaodown','dribbble',str(url))
+                shuchu('插入到mysql去重','成功')
                 print('\n\n')
         else:
             shuchu('已存在跳过',url)
