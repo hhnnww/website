@@ -43,25 +43,21 @@ def single_list():
     return single_list
 
 def imgup(url):
-    hashr = hash(url)
-    hashr = re.sub(r'-','',hashr)
-
+    
     img = HTMLSession().get(url).content
+    on_time = str(datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
+    
     name = os.path.basename(url)
+    name = on_time+'_'+name
+    
     year = str(time.strftime('%Y'))
     month = str(time.strftime('%m'))
+    
     file_path = 'C:\\xampp\\htdocs\\wp-content\\uploads\\'+year+'\\'+month+'\\'+name
 
-    if os.path.isfile(file_path):
-        name = re.sub(r'\.','_'+str(hashr)+'.',name)
-        with open('C:\\xampp\\htdocs\\wp-content\\uploads\\'+year+'\\'+month+'\\'+name,'wb') as f:
-            f.write(img)
-        return 'http://127.0.0.1/wp-content/uploads/'+year+'/'+month+'/'+name
-
-    else:
-        with open('C:\\xampp\\htdocs\\wp-content\\uploads\\'+year+'\\'+month+'\\'+name,'wb') as f:
-            f.write(img)
-        return 'http://127.0.0.1/wp-content/uploads/'+year+'/'+month+'/'+name
+    with open('C:\\xampp\\htdocs\\wp-content\\uploads\\'+year+'\\'+month+'\\'+name,'wb') as f:
+        f.write(img)
+    return 'http://127.0.0.1/wp-content/uploads/'+year+'/'+month+'/'+name
 
 def shuchu(text,link):
     print(xd_time.thetime()+text+':'+link)

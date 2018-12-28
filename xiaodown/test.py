@@ -86,6 +86,12 @@ def fabu(url):
                 })
 
 
+
+
+
+
+
+
 url = 'http://baidu.com/word.png'
 on_time = str(datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
 
