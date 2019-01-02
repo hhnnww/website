@@ -65,8 +65,6 @@ def imgup(url):
 
     if os.path.exists('C:\\xampp\\htdocs\\wp-content\\uploads\\'+year+'\\'+month) == False:
         os.mkdir('C:\\xampp\\htdocs\\wp-content\\uploads\\'+year+'\\'+month)
-    
-    file_path = 'C:\\xampp\\htdocs\\wp-content\\uploads\\'+year+'\\'+month+'\\'+name
 
     with open('C:\\xampp\\htdocs\\wp-content\\uploads\\'+year+'\\'+month+'\\'+name,'wb') as f:
         f.write(img)
