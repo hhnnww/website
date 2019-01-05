@@ -7,6 +7,4 @@ while True:
     # 采集dribbble
     dribbble.run()
     gc.collect()
-    time.sleep(10)
-
-    
+    time.sleep(60*60*4) 

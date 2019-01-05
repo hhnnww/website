@@ -6,8 +6,8 @@ import dribbble
 def sql_chaxun(db_name,biao_name,url):
     db = pymysql.connect(
         host='127.0.0.1',
-        user='root',
-        password='',
+        user='xiaodown',
+        password='199011',
         db=db_name,
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor
@@ -38,8 +38,8 @@ def sql_chaxun(db_name,biao_name,url):
 def sql_charu(db_name,biao_name,url):
     db = pymysql.connect(
         host='127.0.0.1',
-        user='root',
-        password='',
+        user='xiaodown',
+        password='199011',
         db=db_name,
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor

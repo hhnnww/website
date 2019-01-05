@@ -29,7 +29,7 @@ def htmldown(url):
 def page_list():
     x = 1
     page_list = []
-    while(x<=2):
+    while(x<=5):
         page_list.append('https://dribbble.com/?per_page=24&page='+str(x))
         x = x +1
     return page_list
@@ -56,23 +56,22 @@ def imgup(url):
     name = os.path.basename(url)
     name = re.sub(r'.*?\.','.',name)
     name = on_time+name
+    name = re.sub(r'\.+','.',name)
     
     year = str(time.strftime('%Y'))
     month = str(time.strftime('%m'))
 
-    if os.path.exists('C:\\xampp\\htdocs\\wp-content\\uploads\\'+year) == False:
-        os.mkdir('C:\\xampp\\htdocs\\wp-content\\uploads\\'+year)
+    if os.path.exists('/www/wwwroot/www.xiaodown.com/wp-content/uploads/'+year) == False:
+        os.mkdir('/www/wwwroot/www.xiaodown.com/wp-content/uploads/'+year)
 
-    if os.path.exists('C:\\xampp\\htdocs\\wp-content\\uploads\\'+year+'\\'+month) == False:
-        os.mkdir('C:\\xampp\\htdocs\\wp-content\\uploads\\'+year+'\\'+month)
+    if os.path.exists('/www/wwwroot/www.xiaodown.com/wp-content/uploads/'+year+'/'+month) == False:
+        os.mkdir('/www/wwwroot/www.xiaodown.com/wp-content/uploads/'+year+'/'+month)
     
-    file_path = 'C:\\xampp\\htdocs\\wp-content\\uploads\\'+year+'\\'+month+'\\'+name
-
-    with open('C:\\xampp\\htdocs\\wp-content\\uploads\\'+year+'\\'+month+'\\'+name,'wb') as f:
+    with open('/www/wwwroot/www.xiaodown.com/wp-content/uploads/'+year+'/'+month+'/'+name,'wb') as f:
         f.write(img)
 
     time.sleep(1)
-    return 'http://127.0.0.1/wp-content/uploads/'+year+'/'+month+'/'+name
+    return 'https://www.xiaodown.com/wp-content/uploads/'+year+'/'+month+'/'+name
 
 # 格式化打印函数
 def shuchu(text,link):
@@ -81,7 +80,7 @@ def shuchu(text,link):
 # 文章解析发布函数
 def fabu(url):
     
-    wp = Client('http://127.0.0.1/xmlrpc.php', 'admin', '111')
+    wp = Client('https://localhost/xmlrpc.php', 'admin', '12qwaszx')
     post = WordPressPost()
     post.post_status = 'publish'
 
@@ -92,7 +91,7 @@ def fabu(url):
     post.custom_fields = []
     post.terms_names = {}
 
-    post.terms_names['category'] = ['素材']
+    post.terms_names['category'] = ['dribbble']
 
     # url写入自定义字段
     post.custom_fields.append({
@@ -106,8 +105,13 @@ def fabu(url):
     except:
         pass
     else:
-        post.title = str(title)
-        shuchu('开始采集',title)
+        try:
+            title = google_translate.en_to_cn(title)
+        except:
+            post.title = str(title)
+        else:
+            post.title = str(title)
+            shuchu('开始采集',title)
 
     # 内容
     try:
@@ -115,7 +119,13 @@ def fabu(url):
     except:
         post.content = ''
     else:
-        post.content = str(content)
+        try:
+            content = google_translate.en_to_cn(content)
+        except:
+            post.content = str(content)
+        else:
+            post.content = str(content)
+            shuchu('内容翻译','成功')
 
     # 标签
     try:
@@ -123,11 +133,15 @@ def fabu(url):
     except:
         pass
     else:
-        tag_list_text =''
+        tag_list = []
         for i in tag:
-            tag_list_text = tag_list_text + str(i.text) + ','
-        tag_list = tag_list_text.split(',')
-        tag_list = list(filter(None,tag_list))
+            try:
+                tag_cn = google_translate.en_to_cn(str(i.text))
+            except:
+                tag_list.append(str(i.text))
+            else:
+                tag_list.append(tag_cn)
+
         post.terms_names['post_tag'] = tag_list
         shuchu('标签',tag_list)
 
@@ -225,7 +239,7 @@ def fabu(url):
                     })
 
     post.id = wp.call(posts.NewPost(post))
-    shuchu('发布成功','http://127.0.0.1/?p='+str(post.id))
+    shuchu('发布成功','https://www.xiaodown.com/?p='+str(post.id))
 
 def run():
     for url in single_list():
