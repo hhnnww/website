@@ -64,10 +64,17 @@ def imgup(url):
     if os.path.exists('/www/wwwroot/www.xiaodown.com/wp-content/uploads/'+year) == False:
         os.mkdir('/www/wwwroot/www.xiaodown.com/wp-content/uploads/'+year)
 
+<<<<<<< HEAD
     if os.path.exists('/www/wwwroot/www.xiaodown.com/wp-content/uploads/'+year+'/'+month) == False:
         os.mkdir('/www/wwwroot/www.xiaodown.com/wp-content/uploads/'+year+'/'+month)
     
     with open('/www/wwwroot/www.xiaodown.com/wp-content/uploads/'+year+'/'+month+'/'+name,'wb') as f:
+=======
+    if os.path.exists('C:\\xampp\\htdocs\\wp-content\\uploads\\'+year+'\\'+month) == False:
+        os.mkdir('C:\\xampp\\htdocs\\wp-content\\uploads\\'+year+'\\'+month)
+
+    with open('C:\\xampp\\htdocs\\wp-content\\uploads\\'+year+'\\'+month+'\\'+name,'wb') as f:
+>>>>>>> 64d764f2187f15617e3a236db38a1e26302ffb17
         f.write(img)
 
     time.sleep(1)
