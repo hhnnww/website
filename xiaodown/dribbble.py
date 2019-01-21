@@ -18,23 +18,29 @@ from wordpress_xmlrpc import WordPressTerm
 from wordpress_xmlrpc.compat import xmlrpc_client
 from wordpress_xmlrpc.methods import media, posts
 
-ssl._create_default_https_context=ssl._create_unverified_context
+ssl._create_default_https_context = ssl._create_unverified_context
 
 # 下载模块
+
+
 def htmldown(url):
     html = HTMLSession().get(url).html
     return html
 
 # 生成列表页函数
+
+
 def page_list():
     x = 1
     page_list = []
-    while(x<=5):
+    while(x <= 5):
         page_list.append('https://dribbble.com/?per_page=24&page='+str(x))
-        x = x +1
+        x = x + 1
     return page_list
 
 # 从列表页中生成单页函数
+
+
 def single_list():
     single_list = []
     for i in page_list():
@@ -49,15 +55,15 @@ def single_list():
 
 # 图片直接上传函数
 def imgup(url):
-    
+
     img = HTMLSession().get(url).content
     on_time = str(datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
-    
+
     name = os.path.basename(url)
-    name = re.sub(r'.*?\.','.',name)
+    name = re.sub(r'.*?\.', '.', name)
     name = on_time+name
-    name = re.sub(r'\.+','.',name)
-    
+    name = re.sub(r'\.+', '.', name)
+
     year = str(time.strftime('%Y'))
     month = str(time.strftime('%m'))
 
@@ -66,25 +72,29 @@ def imgup(url):
 
     if os.path.exists('/www/wwwroot/www.xiaodown.com/wp-content/uploads/'+year+'/'+month) == False:
         os.mkdir('/www/wwwroot/www.xiaodown.com/wp-content/uploads/'+year+'/'+month)
-    
-    with open('/www/wwwroot/www.xiaodown.com/wp-content/uploads/'+year+'/'+month+'/'+name,'wb') as f:
+
+    with open('/www/wwwroot/www.xiaodown.com/wp-content/uploads/'+year+'/'+month+'/'+name, 'wb') as f:
         f.write(img)
 
     time.sleep(1)
     return 'https://www.xiaodown.com/wp-content/uploads/'+year+'/'+month+'/'+name
 
-# 格式化打印函数
-def shuchu(text,link):
+# 格式化打印函数输出
+
+
+def shuchu(text, link):
     print(xd_time.thetime()+text+':'+str(link))
 
 # 文章解析发布函数
+
+
 def fabu(url):
-    
+
     wp = Client('https://localhost/xmlrpc.php', 'admin', '12qwaszx')
     post = WordPressPost()
     post.post_status = 'publish'
 
-    shuchu('发现文章',url)
+    shuchu('发现文章', url)
 
     html = htmldown(url)
 
@@ -95,8 +105,8 @@ def fabu(url):
 
     # url写入自定义字段
     post.custom_fields.append({
-        'key':'via',
-        'value':str(url)
+        'key': 'via',
+        'value': str(url)
     })
 
     # 获取标题
@@ -111,7 +121,7 @@ def fabu(url):
             post.title = str(title)
         else:
             post.title = str(title)
-            shuchu('开始采集',title)
+            shuchu('开始采集', title)
 
     # 内容
     try:
@@ -125,7 +135,7 @@ def fabu(url):
             post.content = str(content)
         else:
             post.content = str(content)
-            shuchu('内容翻译','成功')
+            shuchu('内容翻译', '成功')
 
     # 标签
     try:
@@ -143,7 +153,7 @@ def fabu(url):
                 tag_list.append(tag_cn)
 
         post.terms_names['post_tag'] = tag_list
-        shuchu('标签',tag_list)
+        shuchu('标签', tag_list)
 
     # 颜色
     try:
@@ -156,10 +166,10 @@ def fabu(url):
             color_list = color_list + str(i.text) + ','
         color_list = color_list[:-1]
         post.custom_fields.append({
-            'key':'color',
-            'value':color_list
+            'key': 'color',
+            'value': color_list
         })
-        shuchu('颜色',color_list)
+        shuchu('颜色', color_list)
 
     # 特色图片
     try:
@@ -169,10 +179,10 @@ def fabu(url):
     else:
         ts_att = imgup(thumb)
         post.custom_fields.append({
-            'key':'thumb',
-            'value':ts_att
-            })
-        shuchu('特色图片',ts_att)
+            'key': 'thumb',
+            'value': ts_att
+        })
+        shuchu('特色图片', ts_att)
 
     # 附件
     img_type = html.find('.main-shot')[0].attrs['class']
@@ -182,20 +192,20 @@ def fabu(url):
         mp4 = html.find('.detail-shot .video-container video')[0].attrs['src']
         att = imgup(mp4)
         post.custom_fields.append({
-            'key':'type',
-            'value':'mp4'
-            })
+            'key': 'type',
+            'value': 'mp4'
+        })
         post.custom_fields.append({
-            'key':'att',
-            'value':att
-            })
-        shuchu('mp4附件',att)
+            'key': 'att',
+            'value': att
+        })
+        shuchu('mp4附件', att)
     else:
         # 如果是图片
         post.custom_fields.append({
-            'key':'type',
-            'value':'img'
-            })
+            'key': 'type',
+            'value': 'img'
+        })
 
         try:
             # 判断是否存在附件页面
@@ -203,10 +213,10 @@ def fabu(url):
         except:
             # 如果不存在附件页面，直接抓取当页图片
             post.custom_fields.append({
-                'key':'att',
-                'value':ts_att
-                })
-            shuchu('没有附件，采用特色图',ts_att)
+                'key': 'att',
+                'value': ts_att
+            })
+            shuchu('没有附件，采用特色图', ts_att)
         else:
             # 开始载入附件页面进行分析
             att_url = 'https://dribbble.com'+str(att_url)
@@ -217,29 +227,30 @@ def fabu(url):
             except:
                 # 如果附件页面只有一张图的情况
                 post.custom_fields.append({
-                    'key':'att',
-                    'value':ts_att
-                    })
-                shuchu('附件页只有一张图，采用特色图',ts_att)
+                    'key': 'att',
+                    'value': ts_att
+                })
+                shuchu('附件页只有一张图，采用特色图', ts_att)
             else:
                 # 如果附件页面存在ul有多张图片
                 att = str(ts_att)
                 for i in img_list:
                     if str(i.find('a img')[0].attrs['src']) == str(thumb):
-                        shuchu('附件与特色图相同','跳过')
+                        shuchu('附件与特色图相同', '跳过')
                     else:
                         img = i.find('a img')[0].attrs['src']
-                        img = re.sub(r'\/thumbnail','',img)
+                        img = re.sub(r'\/thumbnail', '', img)
                         single_att = imgup(img)
                         att = att+','+str(single_att)
-                shuchu('多张图片附件',att)
+                shuchu('多张图片附件', att)
                 post.custom_fields.append({
-                    'key':'att',
-                    'value':att
-                    })
+                    'key': 'att',
+                    'value': att
+                })
 
     post.id = wp.call(posts.NewPost(post))
-    shuchu('发布成功','https://www.xiaodown.com/?p='+str(post.id))
+    shuchu('发布成功', 'https://www.xiaodown.com/?p='+str(post.id))
+
 
 def run():
     for url in single_list():
@@ -247,12 +258,12 @@ def run():
             try:
                 fabu(url)
             except:
-                shuchu('发布错误','跳过')
+                shuchu('发布错误', '跳过')
                 return
             else:
-                xd_sql.sql_charu('xiaodown','dribbble',str(url))
-                shuchu('插入到mysql去重','成功')
+                xd_sql.sql_charu('xiaodown', 'dribbble', str(url))
+                shuchu('插入到mysql去重', '成功')
                 print('\n\n')
         else:
-            shuchu('已存在跳过',url)
+            shuchu('已存在跳过', url)
             print('\n\n')
