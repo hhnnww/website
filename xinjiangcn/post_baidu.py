@@ -15,7 +15,7 @@ post = WordPressPost()
 post.post_status = 'publish'
 
 post.terms_names = {
-    'category': ['旅游问答']
+    'category': ['问答']
 }
 
 
