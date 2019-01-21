@@ -99,7 +99,7 @@ def fabu(url):
         'value':str(url)
     })
 
-    # 标题
+    # 获取标题
     try:
         title = html.find('h1.shot-title')[0].text
     except:
