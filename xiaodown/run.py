@@ -4,7 +4,7 @@ import time
 import gc
 
 while True:
-    # 采集dribbble
+    # 开始采集dribbble
     dribbble.run()
     gc.collect()
     time.sleep(60*60*4) 
