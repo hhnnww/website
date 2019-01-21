@@ -215,7 +215,7 @@ def fabu(url):
                 # 判断附件是否有ul多张图片
                 img_list = att_html.find('#attachments ul')[0].find('li')
             except:
-                # 如果附件页面只有一张图
+                # 如果附件页面只有一张图的情况
                 post.custom_fields.append({
                     'key':'att',
                     'value':ts_att
